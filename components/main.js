@@ -18,7 +18,7 @@ new Vue({
         changeAuthor:
             function () {
                 return {
-                    author: this.author = 'Дюма Александр'
+                    author: this.author = 'Дюма Александр',
                 }
             }
     }
