@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang=ru>
+<head>
+    <meta charset="UTF-8">
+    <title>Mini App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<div class="container pt-5" id="app">
+    <div class="row mb-3">
+        <div class="col">
+            <h1>Tea</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="search">Find you tea</label>
+                <input
+                        type="text"
+                        class="form-control"
+                        id="search"
+                        placeholder="Name, type ..."
+                        v-model="search"
+                >
+            </div>
+            <hr>
+            <ul class="list-group">
+                <li
+                        v-for="(tea, index) in filteredTea"
+                        class="list-group-item list-group-item-action pointer"
+                        @click="selectTea(index)"
+                        :class="{'active': selectedTeaIndex === index}"
+                >
+                    {{ tea.name }} - {{ tea.type }}
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-8 pt-2">
+            <div class="row">
+                <div class="col-md-5">
+                    <h2>{{ tea.name }}</h2>
+                    <img :src="tea.image" :alt="tea.name" class="rounded tea-images">
+                </div>
+                <div class="col-md-7 pt-3">
+                    <h5>Tea details:</h5>
+                    <ul>
+                        <li>Name - <strong>{{ tea.name }} {{ tea.type }}</strong></li>
+                        <li>Year - <strong>{{ tea.year }}</strong></li>
+                        <li>Factory - <strong>{{ tea.factory }}</strong></li>
+                    </ul>
+                    <div class="phone">
+                        <p v-if="teaVisibility">{{ tea.phone }}</p>
+                    </div>
+                    <button class="btn btn-outline-success mr-3" @click="teaVisibility = !teaVisibility">{{
+                        changeBtnText }}
+                    </button>
+                    <button
+                            class="btn btn-primary"
+                            @click="modalVisibility = true"
+                    >
+                        Buy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2" v-if="logs.length !== 0">
+        <div class="col-12">
+            <ul class="list-group">
+                <li
+                        v-for="log in logs"
+                        class="list-group-item "
+                        :class="{
+                        'list-group-item-danger' : log.type === 'cancel',
+                        'list-group-item-success' : log.type === 'ok',
+                        }"
+                >
+                    {{ log.text }} {{ log.date | date }}
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade show" v-if="modalVisibility" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Do you want to this tea?</h5>
+                    <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            @click="modalVisibility = false"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Current tea - <strong>{{ tea.name }}</strong></p>
+                    <ul>
+                        <li>Name - <strong>{{ tea.name }} {{ tea.type }}</strong></li>
+                        <li>Year - <strong>{{ tea.year }}</strong></li>
+                        <li>Factory - <strong>{{ tea.factory }}</strong></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button
+                            type="button"
+                            class="btn btn-primary"
+                            @click="newOrder"
+                    >
+                        Buy
+                    </button>
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                            @click="cancelOrder"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" v-if="modalVisibility"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="main.js"></script>
+</body>
+</html>
